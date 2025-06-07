@@ -1,43 +1,88 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/laptop-screen.png";
-import Profile from "../../assets/images/user.png";
-import Logout from "../../assets/images/logout.png";
-import { Popover } from "antd";
-const renderContent = () => {
-  return (
-    <div>
-      <p className="font-bold text-[18px] text-cyan-900">Anh Vu</p>
-      <div className="flex gap-1 mt-4 bg-green-300 rounded-lg p-3 py-2 hover:bg-green-200 cursor-pointer">
-        <img src={Logout} alt="" width={20} height={16} />
-        <p>Đăng xuất</p>
-      </div>
-    </div>
-  )
-}
-const Navbar = () => {
 
+const Navbar = () => {
   return (
-    <div className="flex justify-between px-4 bg-[#219ebc] py-2">
-      <div className="flex">
-        <NavLink to="/" className="w-12 h-12 rounded-[50%]">
-          <img src={Logo} alt="" />
-        </NavLink>
-        <div className="flex justify-start gap-4 ml-12 mt-[10px]">
-          <NavLink to="/">
-            <p className="font-bold text-white hover:text-green-500 transition duration-300">Home</p>
+    <header className="bg-white shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Logo */}
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-blue-600">
+            {/* <i className="fas fa-laptop mr-2"></i> */}
+            <NavLink to="/" className="w-12 h-12 rounded-[50%] cursor-pointer">
+              <img src={Logo} alt="" width={40} height={40} />
+            </NavLink>
+            {/* LapShop */}
+          </h1>
+        </div>
+
+        {/* Main Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          <NavLink
+            to="/"
+            className="font-medium text-blue-600 cursor-pointer whitespace-nowrap"
+          >
+            Trang chủ
           </NavLink>
-          <NavLink to="/contact">
-            <p className="font-bold text-white hover:text-green-500 transition duration-300">Contact</p>
+          <NavLink
+            to="/"
+            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+          >
+            Sản phẩm
           </NavLink>
+          <NavLink
+            to="/"
+            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+          >
+            Khuyến mãi
+          </NavLink>
+          <NavLink
+            to="/"
+            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+          >
+            Tin tức
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className="font-medium text-gray-700 hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap"
+          >
+            Liên hệ
+          </NavLink>
+        </nav>
+
+        {/* Search Bar */}
+        <div className="hidden md:flex items-center relative w-1/3">
+          <input
+            type="text"
+            placeholder="Tìm kiếm laptop..."
+            className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            // value={searchQuery}
+            // onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button className="absolute right-3 text-gray-500 cursor-pointer !rounded-button whitespace-nowrap">
+            <i className="fas fa-search"></i>
+          </button>
+        </div>
+
+        {/* User Actions */}
+        <div className="flex items-center space-x-5">
+          <button className="text-gray-700 hover:text-blue-600 relative cursor-pointer !rounded-button whitespace-nowrap">
+            <i className="fas fa-shopping-cart text-xl"></i>
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              3
+            </span>
+          </button>
+          <button className="text-gray-700 hover:text-blue-600 cursor-pointer !rounded-button whitespace-nowrap">
+            <i className="fas fa-user text-xl"></i>
+          </button>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
+            Đăng nhập
+          </button>
         </div>
       </div>
-      <Popover content={renderContent} trigger="click">
-        <div className="w-12 h-12 rounded-[50%]">
-          <img src={Profile} alt="" />
-        </div>
-      </Popover>
-    </div>
-  )
-}
+    </header>
+  );
+};
+
 export default Navbar;

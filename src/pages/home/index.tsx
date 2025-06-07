@@ -1,9 +1,11 @@
 import React from "react";
-
+import Brand from "../../components/navbar/brand";
+import HotProduct from "../../components/hot-products";
 const Home =() =>{
    return(
-     <div>
-    <h1>HOME PAGES</h1>
+      <div className="pt-10">
+      <Brand/>
+      <HotProduct/>
     </div>
    )
 }
