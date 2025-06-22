@@ -3,7 +3,7 @@ import { Carousel } from "antd";
 
 const HomeBanner = () => {
     return (
-        <Carousel autoplay arrows={true}>
+        <Carousel autoplay arrows={true} autoplaySpeed={3000}>
             <div className="relative h-[500px] overflow-hidden">
                 <img
                     src="https://laptop678.vn/wp-content/uploads/2024/05/slide5.jpg"
