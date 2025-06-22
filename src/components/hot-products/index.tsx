@@ -1,8 +1,8 @@
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import {isDesktop} from 'react-device-detect'
+import { isDesktop } from 'react-device-detect'
 import ProductsCard from "./productCard";
-import {IHotProduct,dataHotProducts} from "./hotproduct.interface";
+import { IHotProduct, dataHotProducts } from "./hotproduct.interface";
 // interface IHotProduct {
 //     name: string;
 //     image: string;
@@ -98,7 +98,7 @@ const HotProducts = () => {
                     //         </div>
                     //     </div>
                     // </div>
-                    <ProductsCard item={item}/>
+                    <ProductsCard item={item} />
                 ))}
             </div>
         </div>
