@@ -57,47 +57,7 @@ const HotProducts = () => {
             <h1 className="text-2xl font-bold mb-4">Sản Phẩm Nổi Bật</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                 {dataHotProducts.map((item: IHotProduct, index: number) => (
-                    // <div
-                    //     key={index}
-                    //     className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer"
-                    // >
-                    //     <div className="relative">
-                    //         <img className="rounded-xl" src={item.image} alt="" />
-                    //         <div className="absolute top-3 left-3 bg-red-500 rounded text-white px-2 py-1 text-xs font-bold">
-                    //             Giảm {item.discount}%
-                    //         </div>
-                    //         {item.isHot && (
-                    //             <div className="absolute top-3 right-3 bg-yellow-500 rounded text-white px-2 py-1 text-xs font-bold">
-                    //                 HOT
-                    //             </div>
-                    //         )}
-                    //     </div>
-                    //     <div className="p-2">
-                    //         <h3 className="text-lg font-semibold mb-2">{item?.name}</h3>
-                    //         <div className="flex items-center justify-between">
-                    //             <div>
-                    //                 <span className="text-lg font-bold text-blue-600">
-                    //                     {item.price}đ
-                    //                 </span>
-                    //                 <span className="text-sm text-gray-500 line-through ml-2">
-                    //                     {item.oldPrice}đ
-                    //                 </span>
-                    //                 {/* {isDesktop ? (
-                    //                     <span className="text-sm text-gray-500 line-through ml-2">
-                    //                         {item.oldPrice}đ
-                    //                     </span>
-                    //                 ) : (
-                    //                     <p className="text-sm text-gray-500 line-through">
-                    //                         {item.oldPrice}đ
-                    //                     </p>
-                    //                 )} */}
-                    //             </div>
-                    //             <div className="py-1 px-2 bg-blue-500 rounded-full cursor-pointer hover:opacity-70">
-                    //                 <ShoppingCartOutlined className="text-white" />
-                    //             </div>
-                    //         </div>
-                    //     </div>
-                    // </div>
+                    
                     <ProductsCard item={item} />
                 ))}
             </div>
