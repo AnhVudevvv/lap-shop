@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { products } from "./fakeData";
 import ProductCard from "../hot-products/productCard";
 import { dataOptions, IProduct, IOption } from "./homeTypeProducts.interface";
+import { NavLink } from "react-router-dom";
 
 const HomeTypeProducts = () => {
   const [optionSelected, setOptionSelected] = useState<IOption>(dataOptions[0]);
@@ -19,21 +20,20 @@ const HomeTypeProducts = () => {
 
   return (
     <div>
-      <h2>Sản Phẩm Theo Danh Mục</h2>
+      <h2 className="text-2xl font-bold mb-4">Sản Phẩm Theo Danh Mục</h2>
       <div className="flex justify-center w-full">
         <div className="flex gap-2 shadow-md rounded-full p-1 w-fit border-red-100 border">
           {dataOptions.map((item) => (
-            <div  
+            <div
               key={item.id}
               onClick={() => {
                 setOptionSelected(item);
                 setData(products.filter((x) => x.category === item.value))
               }}
-              className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${
-                optionSelected.id === item.id
+              className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${optionSelected.id === item.id
                   ? "bg-blue-600 text-white"
                   : "text-black bg-white"
-              }`}
+                }`}
             >
               {item.label}
             </div>
@@ -46,10 +46,14 @@ const HomeTypeProducts = () => {
           .map((item: IProduct, index: number) => (
             <ProductCard key={index} item={item} />
           ))}
-          {/* {data.map((item: IProduct, index: number) => (
+        {/* {data.map((item: IProduct, index: number) => (
             <ProductCard key={index} item={item} />
           ))} */}
       </div>
+      <div className="px-4 py-2 hover:bg-blue-100 cursor-pointer m-auto mb-6 bg-white border-blue-600 border rounded-full text-blue-600 w-fit" >
+        <NavLink to="/products">Xem thêm sản phẩm</NavLink>
+        
+        </div>
     </div>
   );
 };
