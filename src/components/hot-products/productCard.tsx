@@ -2,6 +2,7 @@ import React from "react";
 import { IHotProduct } from "./hotproduct.interface";
 import Item from "antd/es/list/Item";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 interface Props {
     item: IHotProduct
     isHot?: boolean
@@ -10,9 +11,10 @@ interface Props {
 
 const ProductsCard = (props: Props) => {
     const { item , isHot ,isProduct } = props;
+    const navigate = useNavigate();
     return (
         <div
-
+            onClick={() => navigate(`/product-detail/${item.id}`) }
             className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer"
         >
             <div className="relative">
