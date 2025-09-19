@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Checkbox, GetProp, Select } from "antd";
 import {
@@ -10,10 +10,11 @@ import {
   sorting,
   storage,
 } from "./products.interface";
-import { products, newestProducts } from "./fakedata";
+import { Pagination } from 'antd';
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
-import { useNavigate } from "react-router-dom";
+import { FadeLoader } from "react-spinners";
+
 const items = [
   {
     href: "/",
@@ -25,38 +26,41 @@ const items = [
 ];
 
 const Products = () => {
+  const PAGE_SIZE = 10;
   const [categorySelected, setCategorySelected] = useState("");
   const [priceSorting, setPriceSorting] = useState("newest");
-  const [productData, setProductData] = useState<IProduct[]>(products);
-  const navigate = useNavigate();
+  const [productData, setProductData] = useState<IProduct[]>([]);
+
+  const [ramSelected, setRamSelected] = useState("");
+  const [storageSelected, setStorageSelected] = useState("");
+  const [brandSelected, setBrandSelected] = useState("");
+  const [panigation, setPanigation] = useState({
+    page: 1,
+    total: 0,
+  });
+
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
-    const newListProducts = filterProductsByBrands(
-      products,
-      checkedValues as string[]
-    );
-    // console.log("newListProducts: ", newListProducts);
-    setProductData(newListProducts);
+    // arr = ["dell", "hp", "lenovo", "asus", "acer", "msi", "apple", "gigabyte"]
+    // string = "dell,hp,lenovo,asus,acer,msi,apple,gigabyte"
+    const brandJoined = checkedValues.join(",");
+    console.log("brandJoined: ", brandJoined);
+    setBrandSelected(brandJoined);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&brand=${brandJoined}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
   };
 
-  const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
-    return products.filter((product) => brands.includes(product.brand));
-  };
-
-  const handleFilterCategory = (val: string) => {
+  const handleFilterCategory = async (val: string) => {
     setCategorySelected(val);
-    // categorySelected
-    if(!val) {
-      setProductData(newestProducts);
-    } else {
-      const newProductsByBrand = products.filter((x) => x.category === val);
-      setProductData(newProductsByBrand);
-    }
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    // https://lapshop-be.onrender.com/api/product?category=GAMING&page=${panigation.page}&limit=100&brand=Apple,ASUS&specs[ram]=16GB&specs[storage]=512GB
+    handleFilterProducts(url);
   };
 
-  const handlePriceSorting = (val: string) => {
+  const handlePriceSorting = async (val: string) => {
     setPriceSorting(val);
     if (val === "price-asc") {
       const newListProducts = productData.sort((a, b) => a.price - b.price);
@@ -65,38 +69,72 @@ const Products = () => {
       const newListProducts = productData.sort((a, b) => b.price - a.price);
       setProductData(newListProducts);
     } else if (val === "newest") {
-      const newListProducts = newestProducts.filter(
-        (x) => x.category === categorySelected
+      const newListProducts = productData.sort(
+        (a: any, b: any) =>
+          convertDateStringToTimestamp(b.createdAt) -
+          convertDateStringToTimestamp(a.createdAt)
       );
-      setProductData(newListProducts);
+      setProductData(newListProducts as any);
     }
   };
 
-  // const [hihi, setHihi] = useState<string[]>([]);
+  const convertDateStringToTimestamp = (date: string) => {
+    const converted = Date.parse(date);
+    // console.log("converted: ", converted);
+    return converted;
+  };
 
-  // const onSetHihi = (value: string) => {
-  //   console.log("value selected = ", value);
-  //   console.log("hihi chưa cập nhật: ", hihi);
-  //   let checkedValues = [] as string[]
+  const [isLoading, setIsLoading] = useState(false);
 
-  //   const isExistedVal = hihi.find((item) => item === value); // giá trị này dùng để kiểm tra xem value vừa chọn đã tồn tại trong mảng hihi hay chưa
-  //   if (isExistedVal) {
-  //     // nếu đã tồn tại rồi
-  //     console.log("co VALUE");
-  //     const newVal = hihi.filter((item) => item !== value); // filter - lọc những giá trị ko phải là value vừa được chọn
-  //     setHihi(newVal); // cập nhật lại list hihi
-  //     console.log("hihi đã cập nhật với ĐK 1: ", newVal);
-  //     // console.log("vinh ne: ", hihi);
-  //     checkedValues = newVal;
-  //   } else {
-  //     console.log("ko co VALUE");
-  //     setHihi(hihi.concat(value)); // lưu trực tiếp vào hihi => DÙNG CONCAT ĐỂ NỐI MẢNG CŨ VỚI GIÁ TRỊ VỪA CHỌN
-  //     console.log("hihi đã cập nhật với ĐK 2: ", hihi.concat(value));
-  //     // console.log("dat ne: ", hihi);
-  //     checkedValues = hihi.concat(value)
-  //   }
-  //   return checkedValues
-  // };
+  const getProducts = async () => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}`;
+    handleFilterProducts(url);
+  };
+
+  const handleFilterProducts = async (url: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(url, { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("KET QUA: ", result);
+      setProductData(result.data);
+      setPanigation({
+        page: result.pagination.page,
+        total: result.pagination.total,
+      });
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error(error.message);
+      setIsLoading(false);
+    }
+  };
+
+  const handleChangeRam = async (val: string) => {
+    console.log("val ram: ", val);
+    setRamSelected(val);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&specs[ram]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${val}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
+  };
+
+  const handleChangeStorage = async (val: string) => {
+    console.log("val storage: ", val);
+    setStorageSelected(val);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&specs[storage]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
+    handleFilterProducts(url);
+  };
+  const handlePanigation = async (pageSelected: number) => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pageSelected}&limit=${PAGE_SIZE}&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
+  }
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <div className="mt-4 max-w-7xl mx-auto">
@@ -119,11 +157,10 @@ const Products = () => {
                   <li key={category.id}>
                     <button
                       onClick={() => handleFilterCategory(category.value)}
-                      className={`flex items-center w-full text-left py-1 px-2 rounded-md cursor-pointer whitespace-nowrap hover:bg-gray-50 ${
-                        categorySelected === category.value
-                          ? "text-blue-600"
-                          : "text-gray-700"
-                      }`}
+                      className={`flex items-center w-full text-left py-1 px-2 rounded-md cursor-pointer whitespace-nowrap hover:bg-gray-50 ${categorySelected === category.value
+                        ? "text-blue-600"
+                        : "text-gray-700"
+                        }`}
                     >
                       {category.name}
                     </button>
@@ -183,10 +220,10 @@ const Products = () => {
                     showSearch
                     placeholder="Chọn cấu hình"
                     optionFilterProp="label"
-                    // onChange={onChange}
+                    onChange={handleChangeRam}
                     // onSearch={onSearch}
                     options={ram}
-                    value={ram[0].value}
+                    value={ramSelected}
                     className="w-full"
                   />
                 </div>
@@ -211,10 +248,10 @@ const Products = () => {
                     showSearch
                     placeholder="Chọn cấu hình"
                     optionFilterProp="label"
-                    // onChange={onChange}
+                    onChange={handleChangeStorage}
                     // onSearch={onSearch}
                     options={storage}
-                    value={storage[0].value}
+                    value={storageSelected}
                     className="w-full"
                   />
                 </div>
@@ -223,7 +260,7 @@ const Products = () => {
 
             <button
               className="w-full py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
-              // onClick={resetFilters}
+            // onClick={resetFilters}
             >
               Xóa bộ lọc
             </button>
@@ -245,10 +282,25 @@ const Products = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-            {productData.map((product: IProduct, index: number) => (
-              <ProductCard item={product} key={index} />
-            ))}
+          {isLoading ? (
+            <div className="w-full flex justify-center mt-5">
+              <FadeLoader
+                color={"#1859db"}
+                loading={isLoading}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+              {productData.map((product: IProduct, index: number) => (
+                <ProductCard item={product} key={index} />
+              ))}
+            </div>
+          )}
+          <div className="py-8 justify-center">
+            <Pagination align="center" current={panigation.page} pageSize={PAGE_SIZE} total={panigation.total}
+              onChange={(pageNumber) => handlePanigation(pageNumber)} />
           </div>
         </div>
       </div>

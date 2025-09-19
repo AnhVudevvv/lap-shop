@@ -3,6 +3,9 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { isDesktop } from 'react-device-detect'
 import ProductsCard from "./productCard";
 import { IHotProduct, dataHotProducts } from "./hotproduct.interface";
+import { IProduct } from "../home-type-products/homeTypeProducts.interface";
+import { useState } from "react";
+import { useEffect } from "react";
 // interface IHotProduct {
 //     name: string;
 //     image: string;
@@ -52,14 +55,42 @@ import { IHotProduct, dataHotProducts } from "./hotproduct.interface";
 // ];
 
 const HotProducts = () => {
+    const [productData, setProductData] = useState<IHotProduct[]>([]);
+    useEffect(() => {
+        getProducts();
+      }, []);
+    const getProducts = async () => {
+        const url = `https://lapshop-be.onrender.com/api/product`;
+        handleFilterProducts(url);
+      };
+    
+      const handleFilterProducts = async (url: string) => {
+        // setIsLoading(true);
+        try {
+          const response = await fetch(url, { method: "GET" });
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          const result = await response.json();
+          console.log("KET QUA HOT PRODUCTS: ", result);
+          setProductData(result.data.filter((p: any) => p.isHot).slice(0,4));
+        //   setPanigation({
+        //     page: result.pagination.page,
+        //     total: result.pagination.total,
+        //   });
+        //   setIsLoading(false);
+        } catch (error: any) {
+          console.error(error.message);
+        //   setIsLoading(false);
+        }
+      };
     return (
         <div className="mt-5">
             <h1 className="text-2xl font-bold mb-4">Sản Phẩm Nổi Bật</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-                {dataHotProducts.map((item: IHotProduct, index: number) => (
-                    
-                    <ProductsCard item={item} isHot={true}/>
-                ))}
+            {productData.map((hotProduct: IHotProduct, index: number) => (
+      <ProductsCard key={index} item={hotProduct} isHot={true} />
+    ))}
             </div>
         </div>
     );
