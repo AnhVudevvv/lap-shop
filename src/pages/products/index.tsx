@@ -15,6 +15,7 @@ import { IProduct } from "../../components/home-type-products/homeTypeProducts.i
 import ProductCard from "./productCard";
 import { FadeLoader } from "react-spinners";
 
+
 const items = [
   {
     href: "/",

@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { relatedProducts } from "./fakedata";
 import ProductCard from "../../components/hot-products/productCard";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import{ useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -28,15 +29,33 @@ const items = [
 ];
 
 const ProductDetail = () => {
+  const [productDetail , setProductDetail] = useState<IProduct>();
+  const [listImagesState, setListImagesState] = useState<string[]>([]);
   const { productId } = useParams();
   useEffect(() => {
     console.log("ProductDetail component mounted");
-    window.scroll({top:0, left:0, behavior:"smooth"});
+    window.scroll({ top: 0, left: 0, behavior: "smooth" });
   }, [productId]);
   const navigate = useNavigate();
 
+  const getProductDetail = async () => {
+    const url = `https://lapshop-be.onrender.com/api/products/${productId}`;
+    try {
+      const response = await fetch(url, { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("KET QUA: ", result.product);
+      setProductDetail(result.product);
+      setListImagesState(result.product.images);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
   return (
-    
+
     <div className="max-w-7xl mx-auto min-h-screen bg-white">
       {/* Breadcrumb */}
       <Breadcrumb items={items} className="mt-6" />
@@ -48,13 +67,13 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-w-4 aspect-h-3 bg-gray-100 rounded-lg overflow-hidden">
               <img
-                src={productImages[0]}
+                src={listImagesState[0]}
                 alt="Product"
                 className="w-full h-96 object-cover object-top"
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {productImages.map((image, index) => (
+              {listImagesState.map((image, index) => (
                 <button
                   key={index}
                   className={`aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden cursor-pointer border border-gray-200`}
@@ -72,19 +91,19 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              ASUS TUF Gaming F15 FX506LH-HN188W
+              {productDetail?.name}
             </h1>
 
             <div className="space-y-2">
               <div className="flex items-center space-x-4">
                 <span className="text-3xl font-bold text-blue-600">
-                  22.990.000₫
+                  {productDetail?.price}₫
                 </span>
                 <span className="text-xl text-gray-500 line-through">
-                  25.990.000₫
+                  {productDetail?.oldPrice}₫
                 </span>
                 <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
-                  -12%
+                  Giảm {productDetail?.discount}% 
                 </span>
               </div>
               <p className="text-sm text-gray-600">Đã bao gồm VAT</p>
