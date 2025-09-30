@@ -35,7 +35,7 @@ interface ISpec {
 }
 
 export interface IProduct {
-  id?: number;
+  _id?: number;
   name: string;
   thumbnail?: string;
   discount: number;

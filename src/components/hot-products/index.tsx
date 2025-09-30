@@ -2,10 +2,8 @@ import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { isDesktop } from 'react-device-detect'
 import ProductsCard from "./productCard";
-import { IHotProduct, dataHotProducts } from "./hotproduct.interface";
-import { IProduct } from "../home-type-products/homeTypeProducts.interface";
-import { useState } from "react";
-import { useEffect } from "react";
+import { IHotProduct, } from "./hotproduct.interface";
+import { useEffect, useState } from "react";
 // interface IHotProduct {
 //     name: string;
 //     image: string;

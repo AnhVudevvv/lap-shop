@@ -8,7 +8,7 @@ const ProductCard = (props: Props) => {
   const navigate = useNavigate();
   return (
     
-    <div onClick={() => navigate(`/product-detail/${item.id}`)} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+    <div onClick={() => navigate(`/product-detail/${item._id}`)} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
       <div className="relative">
         <img
           src={item.thumbnail}
