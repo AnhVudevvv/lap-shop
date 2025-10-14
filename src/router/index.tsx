@@ -4,8 +4,11 @@ import Contact from "../pages/contact";
 import Layout from "../layout";
 import Products from "../pages/products";
 import ProductDetail from "../pages/detail";
+import Payment from "../pages/payment";
+import Cart from "../pages/cart";
 import Login from "../pages/signin";
-import Signup from "../pages/signup";
+import Register from "../pages/signup";
+import Admin from "../pages/admin";
 
 export const router = createBrowserRouter([
   {
@@ -14,27 +17,40 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "/products",
-        element: <Products />
+        element: <Products />,
       },
       {
         path: "/contact",
-        element: <Contact />
+        element: <Contact />,
       },
       {
         path: "/product-detail/:productId",
-        element: <ProductDetail />
+        element: <ProductDetail />,
       },
-    ]
-  },{
-        path: "/login",
-        element: <Login />
+      {
+        path: "/payment/:productId",
+        element: <Payment />,
       },
+      {
+        path: "/cart",
+        element: <Cart />,
+      },
+    ],
+  },
   {
-        path: "/register",
-        element: <Signup />
-      },
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    path: "/admin",
+    element: <Admin/>,
+  },
 ]);
