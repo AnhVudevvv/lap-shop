@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Checkbox, GetProp, Select } from "antd";
+import { useLocation } from "react-router-dom";
 import {
   brands,
   categories,
@@ -27,6 +28,7 @@ const items = [
 ];
 
 const Products = () => {
+  const {state} = useLocation();
   const PAGE_SIZE = 10;
   const [categorySelected, setCategorySelected] = useState("");
   const [priceSorting, setPriceSorting] = useState("newest");
@@ -34,11 +36,13 @@ const Products = () => {
 
   const [ramSelected, setRamSelected] = useState("");
   const [storageSelected, setStorageSelected] = useState("");
-  const [brandSelected, setBrandSelected] = useState("");
+  const [brandSelected, setBrandSelected] = useState(state.brandSelected);
   const [panigation, setPanigation] = useState({
     page: 1,
     total: 0,
   });
+  
+
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
@@ -88,7 +92,7 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getProducts = async () => {
-    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${panigation.page}&limit=${PAGE_SIZE}&brand=${state?.brandJoined || ""}`;
     handleFilterProducts(url);
   };
 
@@ -175,7 +179,7 @@ const Products = () => {
               <Checkbox.Group
                 className="flex flex-col gap-2"
                 options={brands}
-                defaultValue={[""]}
+                defaultValue={[state?.brandSelected]}
                 onChange={onChangeBrand}
               />
 

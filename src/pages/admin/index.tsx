@@ -5,7 +5,17 @@ import {
   PieChartOutlined,
   TeamOutlined,
   UserOutlined,
-  CodeSandboxOutlined
+  CodeSandboxOutlined,
+  UnorderedListOutlined,
+  FileTextOutlined,
+  FileAddOutlined,
+  HddOutlined,
+  ProfileOutlined,
+  ShoppingCartOutlined,
+  ShoppingOutlined,
+  SnippetsOutlined,
+  SettingOutlined
+
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';

@@ -111,13 +111,13 @@ const ProductDetail = () => {
                 className="w-full h-96 object-cover object-top"
               />
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-2 ">
               {listImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setIndexImg(index)}
                   className={`aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden cursor-pointer border ${
-                    indexImg === index ? "border-blue-500" : "border-gray-200"
+                    indexImg === index ? "border-blue-500" : "border-gray-200 "
                   }`}
                 >
                   <img
