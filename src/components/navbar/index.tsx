@@ -4,6 +4,7 @@ import Logo from "../../assets/images/laptop-screen.png";
 import { useUserCart } from "../../store/useUserCart";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Popover } from "antd";
+import { ShoppingOutlined } from "@ant-design/icons";
 
 const Navbar = () => {
   const { countQuantityCart } = useUserCart();
@@ -26,10 +27,39 @@ const Navbar = () => {
 
   const content = (
     <div>
-      <p className="font-bold text-center text-purple-500">{userInfo?.name}</p>
-      <button onClick={hanldeLogout} className="mt-4 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap">
+      <p className="font-bold text-center text-purple-500 mb-2">
+        {userInfo?.name}
+      </p>
+      <hr />
+      <div className="flex gap-2 m-1 cursor-pointer">
+        <p className="text-green-700 font-bold">Đơn hàng</p>
+        <ShoppingOutlined className="text-green-700" />
+      </div>
+      <hr />
+      <button
+        onClick={hanldeLogout}
+        className="mt-4 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap"
+      >
+        Đăng xuất
+      </button>const content = (
+    <div>
+      <p className="font-bold text-center text-purple-500 mb-2">
+        {userInfo?.name}
+      </p>
+      <hr />
+      <div className="flex gap-2 m-1 cursor-pointer">
+        <p className="text-green-700 font-bold">Đơn hàng</p>
+        <ShoppingOutlined className="text-green-700" />
+      </div>
+      <hr />
+      <button
+        onClick={hanldeLogout}
+        className="mt-4 bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium cursor-pointer !rounded-button whitespace-nowrap"
+      >
         Đăng xuất
       </button>
+    </div>
+  );
     </div>
   );
 
@@ -57,20 +87,18 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-6">
           <NavLink
             to="/"
-            className={`font-medium ${
-              navSelected === "/" ? "text-blue-600" : "text-gray-700"
-            } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
+            className={`font-medium ${navSelected === "/" ? "text-blue-600" : "text-gray-700"
+              } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Trang chủ
           </NavLink>
           <NavLink
             to="/products"
-            className={`font-medium ${
-              navSelected === "/products" ||
-              navSelected.includes("product-detail")
+            className={`font-medium ${navSelected === "/products" ||
+                navSelected.includes("product-detail")
                 ? "text-blue-600"
                 : "text-gray-700"
-            } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
+              } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Sản phẩm
           </NavLink>
@@ -88,9 +116,8 @@ const Navbar = () => {
           </NavLink>
           <NavLink
             to="/contact"
-            className={`font-medium ${
-              navSelected === "/contact" ? "text-blue-600" : "text-gray-700"
-            } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
+            className={`font-medium ${navSelected === "/contact" ? "text-blue-600" : "text-gray-700"
+              } hover:text-blue-600 transition-colors cursor-pointer whitespace-nowrap`}
           >
             Liên hệ
           </NavLink>
@@ -102,8 +129,8 @@ const Navbar = () => {
             type="text"
             placeholder="Tìm kiếm laptop..."
             className="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-            // value={searchQuery}
-            // onChange={(e) => setSearchQuery(e.target.value)}
+          // value={searchQuery}
+          // onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button className="absolute right-3 text-gray-500 cursor-pointer !rounded-button whitespace-nowrap">
             <i className="fas fa-search"></i>
